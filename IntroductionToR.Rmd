@@ -1,0 +1,989 @@
+---
+title: "Introduction to R"
+author:
+ - email: "mpetevap@uni-sofia.bg"
+   name: "Monika Peteva Petkova"
+date: "`r format(Sys.time(), '%Y')`"
+output:
+  html_notebook:
+    toc: yes
+  word_document: 
+    toc: true
+  html_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Basic Syntax
+## Basic mat
+```{r}
+2 + 3
+2 + 3 + 4
+2 - 3
+2 * 3
+2 / 3
+(2 + 3) * 4
+2^3
+```
+## Comments
+```{r}
+# Comment
+```
+## Case sensitive
+## Naming convention is with ".", not with "_"
+
+## Not typified
+```{r}
+a = 5
+a = 5.4
+a = "string"
+```
+## Variable assignment operators
+```{r}
+a = 5
+a <- 5
+
+a = b = 5
+a <- b <- 5
+
+5 -> a # This is not usually used
+```
+## Print the value of an object
+```{r}
+a = 5
+a
+print(a) # This is not usually used
+```
+## Removing variable
+```{r}
+rm(a)
+```
+## Getting help
+```{r}
+?print
+help(print)
+```
+## Look for function using part of its name
+```{r}
+apropos("mea")
+```
+
+
+# Data Types
+* Logical
+* Integer
+* Numeric
+* <span style="color:lightgrey">Complex</span>
+* Character
+* <span style="color:lightgrey">Dates</span>
+
+
+**class()** &nbsp; - &nbsp; Take the type of the object\
+**is.\<type\>()** &nbsp; - &nbsp; Check the \<type\> of the object\
+**as.\<type\>()** &nbsp; - &nbsp; Change the \<type\> of the object\
+
+## Logical
+Represent data that can be either **TRUE** or **FALSE**.\
+**True** is the same as **1**. **False** is the same as **0**.\
+```{r}
+x = 1
+y = 2
+z = x > y
+
+# Prints the class type
+class(z)
+
+# Check if the class type is logical
+is.logical(z)
+# Check if the class type is logical
+is.logical(2.5)
+# Check if the class type is logical
+is.logical(y)
+
+# Converts y to type logical
+k = as.logical(1)
+k
+class(k)
+# Converts y to type logical
+t = as.logical("string")
+t
+class(t)
+# Converts y to type logical
+f = as.logical(0)
+f
+class(f)
+```
+
+Some more examples:
+```{r}
+u = TRUE
+v = FALSE
+
+z = T
+y = F
+
+u & v
+u | v
+!u
+
+2 == 3
+2 != 3
+2 < 3
+2 <= 3
+
+5 * TRUE
+
+"data" == "statistics"
+"data" < "statistics"
+
+help("&") # Getting help
+```
+
+## Integer
+If you want one variable to be integer, you must set it explicitly.
+```{r}
+x = 3 # By default it is numeric
+x
+class(x) # numeric
+is.integer(x)
+
+# Defines integer
+y = as.integer(3)
+y
+class(y)
+is.integer(y)
+
+# Defines integer
+z = 3L
+z
+class(z)
+is.integer(z)
+
+class(4L * 2)
+class(6L / 2L)
+
+as.integer("12.35")
+as.integer("Something")
+```
+
+## Numeric
+It handels integers, decimals, both positive and negative and zero.
+```{r}
+k = 1 # By default it is numeric
+k
+class(k)
+is.numeric(k)
+
+x = 10.5
+x
+class(x)
+is.numeric(x)
+```
+
+## Complex
+```{r}
+z = 5 + 6i
+z
+class(z)
+is.complex(z)
+
+as.complex(4)
+```
+
+## Character
+```{r}
+s = "statistics"
+s
+class(s)
+is.character(s)
+
+as.character(123)
+
+# Number of characters
+nchar(s)
+# Substring
+substr(s, start = 1, stop = 4)
+```
+
+## Dates
+R has numerous different types of dates.
+```{r}
+# Stores just data
+today = as.Date("2000-11-20")
+today
+class(today)
+
+as.numeric(today)
+
+# Stores data and time
+today = as.POSIXct("2000-11-20 17:42")
+today
+class(today)
+
+as.Date(today)
+as.numeric(today)
+```
+
+# Structures
+Statistics is study of data. So we will learn how to enter and manipulate data into R.
+
+* Vecotr
+* List
+* <span style="color:lightgrey">Array</span>
+* Matrix
+* Data Frame
+
+## Vector
+Collection of elements of all the **same type**. It keeps track of the order that the data is entered in.\
+**Indexing** of the vector starts from **1** !!!
+```{r}
+x = c(1, 2, 3); x
+y = c(5, 6, 7, 8, 9, 10); y
+z = c(TRUE, FALSE); z
+s = c("S", "t", "a", "t", "i", "s", "t", "i", "c", "s"); s
+```
+
+Operations on te elements of a vector\
+R is **vectorized laguage**, so operations are applied to each element of the vector automatically, without the need to loop through the vector.
+```{r}
+x = c(1, 2, 3); x
+x + 2
+5 * x
+x^2
+sqrt(x)
+length(x)
+```
+
+Operations on vectors with the same length
+```{r}
+x = c(1, 2, 3)
+y = c(5, 6, 7)
+x + y
+y - x
+x * y
+x / y
+
+```
+
+If the two vectors are with **different length**, to make the operation we repeat the elements of the shorter vector and then make the operation.
+```{r}
+x = c(1, 2, 3)
+y = c(5, 6, 7, 8, 9, 10)
+x + y 
+y - x
+x * y
+x / y
+```
+
+Taking elements from a vactor
+```{r}
+y = c(5, 6, 7, 8, 9, 10)
+y[3]
+
+y[c(3, 4)]
+y[c(4, 2, 3)]
+
+y[-3]
+
+y[8]
+
+y[9] = 11
+y[1:9]
+```
+
+Different types of generating vectors
+```{r}
+1:17
+1:-15
+
+seq(1, 17, by = 2)
+
+rep(1:8, 2)
+rep(1:8, each = 2)
+```
+
+Some more examples
+```{r}
+x = 5:7; x
+y = 2:5; y
+y <= 3
+x[y <= 3]
+sum(y <= 3)
+sum(x[y <= 3])
+which(y >= 3)
+x[which(y >= 3)]
+
+z = 5:21; z
+z[y <= 3] # Differnt length vectors !!!
+
+```
+
+## Lists
+Hold objects **not** necessarily from the **same type** or same **length**.
+```{r}
+x = list(1, 2, 3); x
+
+y = list(a = 1, b = 2, c = 3); y
+
+z = list(a = c(1, 2, 4, 5),
+         b = c(TRUE, FALSE, TRUE),
+         c = c("Statistics")); z
+```
+
+## Array
+**Multidimentional** vector. All the elements must be of the **same type**.
+```{r}
+x = array(1:12, dim = c(2, 3, 2)); x
+```
+
+Taking elements of the array
+```{r}
+x[1, , ]
+
+x[1, , 1]
+
+x[, , 1]
+```
+
+## Matrix
+All of the elements of the matrix must be of the **same type**.
+
+Generating matrix
+```{r}
+A = matrix(c(2, 4, 1, 5, 7, 6),
+           nrow = 2,
+           ncol = 3,
+           byrow = TRUE)
+A
+B = matrix(c(2, 4, 3, 1, 5, 7),
+           nrow = 3,
+           ncol = 2)
+B
+```
+
+Dimentions of the matrix
+```{r}
+dim(B)
+```
+
+Taking elements of the matrix
+```{r}
+A[2, 3]
+A[2, ]
+A[, 3]
+A[, c(1, 3)]
+```
+
+Operations on matrixes
+```{r}
+A + 3
+
+G = matrix(c(rep(1:2, 3)), nrow = 2); G
+A + G
+A*G
+t(A) # Transpose
+G %*% t(A) # Multiplying two matrixes
+```
+
+You can also see:
+```{r}
+?cbind
+?rbind
+?dimnames
+```
+
+## Data Frame
+Hold objects **not** necessarily from the **same type** but with the **same length**.
+```{r}
+first = 1:10 
+second = c("aa", "bb", "cc", "dd", "ee", "ff", "gg", "hh", "ii", "jj") 
+third = c(TRUE, FALSE, TRUE, TRUE, FALSE, TRUE, FALSE, FALSE, TRUE, FALSE) 
+
+df = data.frame(first, second, third); df
+View(df)
+```
+
+```{r}
+class(df)
+```
+
+
+We can see the first or the last rows of the data frame
+```{r}
+head(df)
+head(df, n = 3)
+tail(df)
+tail(df, n = 3)
+```
+
+
+We can see the dimensions of the matrix
+```{r}
+dim(df)
+dim(df)[1]
+dim(df)[2]
+
+nrow(df)
+
+ncol(df)
+```
+
+We can give or change the names of the columns of the data frame
+```{r}
+df = data.frame(A = first, B = second, C = third); df
+View(df)
+```
+
+We can see the names of the columns
+```{r}
+names(df)
+```
+
+We can give names to the rows of the data frame
+```{r}
+rownames(df) = c("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"); df
+View(df)
+```
+
+Taking elements of the data frame
+```{r}
+ # row 2, column 3
+df[2, 3]
+
+# row 2
+df[2, ]
+# column 3
+df[, 3]
+
+# row 2, columns 2 and 3
+df[2, 2:3]
+
+# row 2, columns 1 and 2
+df[2, c("A" , "B")]
+
+# column 1
+df$A
+
+# column 2
+df[[2]]
+```
+
+# Missing Data
+* **NA** - missing value
+* **NULL** - absence of anything
+```{r}
+x = c(1, 2, NA, 3, NA, 4); x
+is.na(x)
+sum(x)
+sum(x, na.rm = TRUE) # Removing the NA values before the sum
+
+y = c(1, NULL, 2); y
+is.null(y)
+length(y)
+```
+
+# Packages
+## Installing packages
+```{r}
+?install.packages
+help("install.packages")
+# install.packages("UsingR")
+# install.packages("MASS")
+```
+
+## Uninstlling packages
+```{r}
+# remove.packages("MASS")
+```
+
+## Loading packages
+```{r}
+?library
+library(UsingR)
+library(MASS)
+```
+
+## Unload packages
+```{r}
+# detach("package:MASS")
+```
+
+Taking information about a data frame, if it is available.
+```{r}
+mtcars
+View(mtcars)
+?mtcars
+```
+
+Some more examples with data frames from this packages
+```{r}
+# Dimentions of the data frame
+dim(mtcars)
+# Number of rows
+nrow(mtcars)
+# Number of columns
+ncol(mtcars)
+
+# row 1, column 2
+mtcars[1, 2]
+# row with name "Mazda RX4", column with name "cyl"
+mtcars["Mazda RX4", "cyl"]
+# coulmn 9
+mtcars[[9]]
+# column with name "am"
+mtcars[["am"]]
+# column with name "am"
+mtcars$am
+```
+
+Attach data frame, so it is not needed to always write the data frame name infront of the column name.
+```{r}
+?attach
+
+names(mtcars)
+mtcars$mpg
+
+attach(mtcars)
+mpg
+```
+
+# Reading data from file
+
+If the file is in your working directory, you do not need to specify the path to the file.
+
+## Reading from .txt file
+```{r}
+?read.table
+our.data = read.table("CData.txt", header = TRUE)
+our.data
+```
+
+## Reading from .csv file
+```{r}
+?read.csv
+pokemon = read.csv("pokemon.csv")
+pokemon
+
+titanic = read.csv("titanic.csv")
+titanic
+```
+
+# Some more functions
+* min() - min value
+* max() - max value
+* diff() - lagged differences
+* cummin() - cumulative min
+* cummax() - cumulative max
+* sort() -
+* order() -
+```{r}
+x = c(10, 1, 3, 4, 7, 34, 23, 10, 0, 0); x
+min(x)
+max(x)
+diff(x)
+cummin(x)
+cummax(x)
+```
+
+# Statistics
+## mean()
+Arithmetic mean
+\[
+\bar{x} = \frac{1}{n} \sum_{i=1}^{n}x_{i} .
+\]
+```{r}
+x = c(10, 1, 3, 4, 7, 34, 23, 10, 0, 0)
+mean(x)
+
+x = c(1, 1, 3, 4, 7, 3, 2, 1, 0, 0, 11000)
+mean(x)
+```
+## median()
+Sample median. 
+```{r}
+?median
+```
+## var()
+\[
+\sigma^2 = \frac{1}{n - 1} \sum_{i=1}^{n}(x_{i} - \bar{x})^2 .
+\]
+```{r}
+?median
+```
+## sd()
+\[
+\sigma = \sqrt{\sigma^2} .
+\]
+```{r}
+?median
+```
+
+# Examples
+## Example 1:
+We have the number of phone calls recorded for 2 weeks.
+```{r}
+phone.calls1 = c(10, 4, 1, 13, 7, 14, 8)
+phone.calls1
+phone.calls2 = c(8, 2, 4, 15, 3, 7, 15)
+phone.calls2
+
+phone.calls2[c(1, 2, 3, 4, 5)] # slicing
+phone.calls2[1:5] # slicing
+phone.calls2[seq(1,5,by = 1)] # slicing
+```
+But we have mistaken the number of calls in the first day of the second week.
+```{r}
+phone.calls2[1] = 9
+phone.calls2
+```
+Print the number of phone calls in the fourth day of the second week.
+```{r}
+phone.calls2[4]
+```
+Print the number of phone calls in all the days, except the fourth day of the second week.
+```{r}
+phone.calls2[-4] # Gives everything except these indices
+```
+Print maximum number of phone calls for the second week
+```{r}
+max(phone.calls2)
+```
+Which days the phone calls were 15 in the second week
+```{r}
+phone.calls2 == 15
+```
+This gives a vector of TRUE and FALSE
+How can we get the indices, so we can understand which day was that?
+```{r}
+which(phone.calls2 == 15) # extraction by a logical vector
+```
+
+Whe can make it one one line - but it is not readable
+```{r}
+(1:length(phone.calls2))[phone.calls2 == max(phone.calls2)]
+```
+
+Find the number of all phone calls for the second week.
+```{r}
+sum(phone.calls2)
+```
+Find the number of days with more than 5 calls in the second week
+```{r}
+sum(phone.calls2 > 5)
+```
+Find the differences in number of calls for day between the 2 weeks
+```{r}
+phone.calls1 - phone.calls2
+```
+Find the differences in the calls between the days during the second weeks
+```{r}
+diff(phone.calls2)
+```
+
+## Example 2:
+We have the stock price for 10 days
+```{r}
+stock.price = c(45, 43, 46, 48, 51, 46, 50, 47, 46, 45)
+stock.price
+```
+Find the min price and the max price of the stock during this 10 days
+```{r}
+max(stock.price)
+min(stock.price)
+```
+Find the mean price of the stock during 10 days
+```{r}
+mean(stock.price)
+```
+Find the median of the stock price during this 10 days
+```{r}
+median(stock.price)
+```
+Lets add the price for some more days
+```{r}
+stock.price = c(stock.price, 48, 49, 51, 50, 49)
+```
+How many days we have been observing the stox price
+```{r}
+length(stock.price)
+```
+We have observed that on day 16 the price was 41. Can you add it?
+```{r}
+stock.price[16] = 41 # add to a specified index
+```
+Can you add the stock prices for the next 4 days?
+```{r}
+stock.price[17:20] = c(40, 38, 35, 40) # add to many specified indices
+```
+What was the max and min price at any moment for the stock
+```{r}
+cummax(stock.price)
+cummin(stock.price)
+```
+What was the differences between everyday prices?
+```{r}
+diff(stock.price)
+```
+
+# Problems - Verzani - page 7
+## Problem 2.1 
+Suppose you keep track of your mileage each time you fill up. At your last 6 fill-ups the mileage was
+\[
+65311 \quad 65624 \quad 65908 \quad 66219 \quad 66499 \quad 66821 \quad 67145 \quad 67447
+\]
+Enter these numbers into R. Use the function diff on the data. What does it give?
+```{r}
+miles = c(65311, 65624, 65908, 66219, 66499, 66821, 67145, 67447)
+x = diff(miles)
+```
+You should see the number of miles between fill-ups. Use the max to find the maximum number of miles between fill-ups, 
+the mean function to find the average number of miles and the min to get the minimum number of miles.
+```{r}
+max(miles)
+mean(miles)
+min(miles)
+```
+
+## Problem 2.2
+Suppose you track your commute times for two weeks (10 days) and you find the following times in minutes
+\[
+17 \quad 16 \quad 20 \quad 24 \quad 22 \quad 15 \quad 21 \quad 15 \quad 17 \quad 22
+\]
+Enter this into R.
+```{r}
+commutes = c(17, 16, 20, 24, 22, 15, 21, 15, 17, 22)
+```
+Use the function max to find the longest commute time, 
+```{r}
+max(commutes)
+```
+the function mean to find the average
+```{r}
+mean(commutes)
+```
+and the function min to find the minimum.
+```{r}
+min(commutes)
+```
+Oops, the 24 was a mistake. It should have been 18. How can you fix this?
+```{r}
+mistaken = which(commutes == 24)
+commutes[mistaken] = 18
+```
+Do so, and then find the new average.
+```{r}
+mean(commutes)
+```
+How many times was your commute 20 minutes or more?
+```{r}
+sum(commutes >= 20)
+```
+What do you get? What percent of your commutes are less than 17 minutes? How can you answer this with R?
+```{r}
+sum(commutes < 17)/length(commutes)*100
+```
+
+## Problem 2.3
+Your cell phone bill varies from month to month. Suppose your year has the following monthly amounts
+\[
+46 \quad 33 \quad 39 \quad 37 \quad 46 \quad 30 \quad 48 \quad 32 \quad 49 \quad 35 \quad 30 \quad 48
+\]
+Enter this data into a variable called bill.
+```{r}
+bill = c(46, 33, 39, 37, 46, 30, 48, 32, 49, 35, 30, 48)
+```
+Use the sum command to find the amount you spent this year on the cell phone.
+```{r}
+sum(bill)
+```
+What is the smallest amount you spent in a month?
+```{r}
+min(bill)
+```
+What is the largest?
+```{r}
+max(bill)
+```
+How many months was the amount greater than $40?
+```{r}
+sum(bill > 40)
+```
+What percentage was this?
+```{r}
+sum(bill > 40)/length(bill) * 100
+```
+
+## Problem 2.4
+You want to buy a used car and find that over 3 months of watching the classifieds you see the following prices (suppose the cars are all similar)
+\[
+9000 \quad 9500 \quad 9400 \quad 9400 \quad 10000 \quad 9500 \quad 10300 \quad 10200
+\]
+```{r}
+price = c(9000, 9500, 9400, 9400, 10000, 9500, 10300, 10200)
+```
+Use R to find the average value and compare it to Edmund's (http://www.edmunds.com) estimate of $9500.
+```{r}
+mean(price)
+mean(price) > 9500
+```
+Use R to find the minimum value and the maximum value.
+```{r}
+min(price)
+max(price)
+```
+
+## Problem 2.5
+Try to guess the results of these R commands. We assume:
+```{r}
+x = c(1,3,5,7,9)
+y = c(2,3,5,7,11,13)
+```
+* 1
+```{r}
+x + 1
+```
+* 2
+```{r}
+y*2
+```
+* 3
+```{r}
+length(x)
+length(y)
+```
+* 4
+```{r}
+x + y
+```
+* 5
+```{r}
+sum(x > 5)
+sum(x[x > 5])
+```
+* 6
+```{r}
+sum(x > 5 | x < 3)
+```
+* 7
+```{r}
+y[3]
+```
+* 8
+```{r}
+y[-3]
+```
+* 9
+```{r}
+y[x]
+```
+* 10
+```{r}
+y[y >= 7]
+```
+
+# Tasks - moodle
+
+## Задача 1
+Създайте вектор {8, 3, 8, 7, 15, 9, 12, 4, 9, 10}. Превърнете вектора в матрица 5x2. Задайте имена на редовете на матрицата - r1, r2 ... Добавте още една колона съдържаща нечетните числа - 1, 3, 5 ... Сортирайте матрицата по първа колона в растящ ред
+```{r}
+data = c(8, 3, 8, 7, 15, 9, 12, 4, 9, 10, 5, 1); data
+matrix = matrix(data = data, nrow = 5, ncol = 2); matrix
+matrix = matrix(data = data,
+                nrow = 5,
+                ncol = 2,
+                dimnames = list(c("r1", "r2", "r3", "r4", "r5")))
+matrix
+matrix = cbind(matrix, c(1, 3, 5, 7, 9)); matrix
+# Сортира първия стълб само
+?sort # sort - Sort a vector or factor (partially) into ascending or descending order.
+sort(matrix[,1])
+# Сортира матрицата по първия стълб
+?order # order - Returns a permutation which rearranges its first argument into ascending or descending order, breaking ties by further arguments.
+matrix[order(matrix[,1]),]
+```
+
+## Задача 2
+Разгледайте данните 'homedata' от пакета 'UsingR'. Създайте два вектора съдържащи цените на къщите през 1970 и 2000г.\
+```{r}
+# install.packages("UsingR")
+library(UsingR)
+homedata
+head(homedata)
+homedata1970 = homedata$y1970
+head(homedata1970)
+homedata2000 = homedata$y2000
+head(homedata2000)
+```
+Определете:
+а) Най-скъпата и най-евтината къща през 2000г, техните цени през 1970г
+```{r}
+minPrice = min(homedata2000); minPrice
+maxPrice = max(homedata2000); maxPrice
+homedata1970[which(homedata2000 == minPrice)]
+homedata1970[which(homedata2000 == maxPrice)]
+```
+б) цените на 5-те най-скъпи къщи през 2000г
+```{r}
+tail(sort(homedata2000),5)
+```
+в) броят на къщите по-скъпи от 750 000 през 2000г
+```{r}
+sum(homedata2000 > 750000)
+```
+* изкарайте цените им
+```{r}
+mostExpensive = homedata2000[homedata2000 > 750000]
+mostExpensive
+```
+г) средната цена през 1970г на къщите от в)
+```{r}
+mean(mostExpensive)
+```
+д) цената през 2000г на тези къщи, чиято цена е намаляла
+```{r}
+homedata2000[which(homedata2000 < homedata1970)]
+```
+е) 10-те къщи с най-голямо процентно увеличение на цената
+```{r}
+x = (homedata2000 - homedata1970)/homedata1970*100
+sort(x, decreasing = TRUE)
+head(sort(x, decreasing = TRUE), 10)
+```
+Имаме 1 къща с процентно увеличение на цената Inf, защото цената е през 1970та е 0
+```{r}
+sum(homedata1970 == 0)
+```
+
+## Задача 3
+Разгледайте данните ’survey’ от пакета ’MASS’. Намерeте:
+```{r}
+# install.packages("MASS")
+library(MASS)
+?survey
+# This data frame contains the responses of 237 Statistics I students at
+# the University of Adelaide to a number of questions.
+head(survey)
+summary(survey)
+```
+а) броя на мъжете;
+```{r}
+?sum
+sum(survey$Sex == "Male", na.rm = TRUE)
+```
+б) броя на мъжете пушачи;
+```{r}
+sum(survey$Sex == "Male" & survey$Smoke != "Never", na.rm = TRUE)
+```
+в) средната височина на мъжете;
+```{r}
+mean(survey$Height, na.rm = TRUE)
+```
+г) височината и пола на 6-те най-млади студента.
+```{r}
+head(survey[survey$Age == sort(survey$Age), c("Height", "Sex")], 6)
+```
+
