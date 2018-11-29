@@ -1,0 +1,425 @@
+---
+title: "Univariate Data"
+author:
+  - email: "mpetevap@uni-sofia.bg"
+name: "Monika Peteva Petkova"
+date: "`r format(Sys.time(), '%Y')`"
+output:
+  html_notebook:
+  toc: yes
+word_document: 
+  toc: true
+html_document:
+  toc: true
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Three types of data:
+* Categorical
+* Numeric
+* * Discrete numeric
+* * Continuous numeric
+
+Methods for viewing and summarizing the data depend on the type.
+
+## Categorical data
+Data that records categories
+Examples:
+* Hair color
+* Eye color
+* Computer brand
+
+## Discrete numeric quantities:
+Examples:
+* Age of a person - 10, 22, 50, 73
+* Weight - 50, 60, 62
+
+## Continuous numeric quantities:
+* Height - 1.60, 1.62, 1.70, 1.80
+
+# Methods for viewing data
+## Categorical
+### table()
+### prop.table()
+### bar graphs
+### pie charts
+
+## Numeric
+### summary()
+### fivenum()
+### Measures of center and spread
+#### Center
+##### mean
+##### trimmed mean 
+- useful if the data has many outliers 
+```{}
+x = c(-100, 0, 10, 10000)
+mean(x, trim = 1/10) 
+```
+We trim off 1/10 from the top and the bottom and then take the average
+As we trim more and more, the value of the mean gets closer to the median which is when trim = 1/2
+
+##### median 
+Indifferent for larger values...
+
+#### Spread
+##### standard deviation 
+sensitive to outliers
+
+##### variance
+sensitive to outliers
+
+##### IQR(interquartile range)
+difference of the 3rd and 1st quantile
+
+##### mad (median average deviation)
+finds the median of the absolute differences from the median and then multiplies by a constant.
+                                    median|X_i - median(X)| (1.4826)
+
+### stem-and-leaf charts
+for small data sets, for seeing the shape of the distribution and the values
+
+### hist
+### boxplot
+### density
+### polygon
+
+# Tasks - moodle
+Разглеждаме данните 'survey' от пакета "MASS'.
+```{r}
+# install.packages("MASS")
+library(MASS)
+names(survey)
+summary(survey)
+View(survey)
+?survey
+```
+
+## Задача 1
+Въз основа на данните пресметнете вероятноститте:
+
+а) Случайно избран човек да се окаже редовен пушач.
+P(Smoke = "Regul") = ?
+```{r}
+length = length(survey$Smoke) - sum(is.na(survey$Smoke))
+P.Regul = sum(survey$Smoke == "Regul", na.rm = TRUE) / length
+P.Regul
+
+prop.table(table(survey$Smoke))
+prop.table(table(survey$Smoke))["Regul"]
+```
+
+б) Случиайно избран човек да се окаже редовно пушещ мъж.
+P(Smoke = "Regul" & Sex = "Male") = ?
+```{r}
+length = length(survey$Smoke) - sum(is.na(survey$Smoke) | is.na(survey$Sex))
+P.RegulANDsmoke = sum(survey$Smoke == "Regul" & survey$Sex == "Male", na.rm = TRUE) / length
+P.RegulANDsmoke
+
+prop.table(table(survey$Smoke, survey$Sex))
+prop.table(table(survey$Smoke, survey$Sex))["Regul", "Male"]
+```
+
+в) Случайно избран мъж да се окаже редовен пушач
+ P(Smoke = "Regul" | Sex = "Male") = P(Smoke = "Regul" & Sex = "Male") / P(Sex = "Male") = ?
+```{r}
+length = length(survey$Sex) - sum(is.na(survey$Sex))
+P.Male = sum(survey$Sex == "Male", na.rm = TRUE) / length
+P.RegulANDsmoke / P.Male
+
+prop.table(table(survey$Sex, survey$Smoke), 1)
+prop.table(table(survey$Sex, survey$Smoke), 1)["Male", "Regul"]
+```
+
+Г) Случайно избран редовен пушач да се окаже мъж
+  P(Sex = "Male" | Smoke = "Regul") = P(Sex = "Male" & Smoke = "Regul") / P(Smoke = "Regul") =  ?
+```{r}
+P.RegulANDsmoke / P.Regul
+
+prop.table(table(survey$Sex, survey$Smoke), 2)
+prop.table(table(survey$Sex, survey$Smoke), 2)["Male", "Regul"]
+```
+
+## Задача 2
+Представете графично данните за тютюнопушенето на студентите. А също и за тютюнпушенето в зависимост от пола. \
+
+Данните за тютюнопушенето са:
+```{r}
+summary(survey$Smoke)
+```
+Данните са качествени. Следователно може да разгледаме честотната им таблица и графиките.
+```{r}
+table(survey$Smoke, useNA = "ifany")
+prop.table(table(survey$Smoke, useNA = "ifany"))
+barplot(table(survey$Smoke, useNA = "ifany"),
+        main = "Smoking",
+        col = c("black", "green", "lightgrey", "darkgrey"))
+pie(table(survey$Smoke, useNA = "ifany"),
+    main = "Smoking",
+    col = c("black", "green", "lightgrey", "darkgrey"))
+```
+Също така можем да използваме:
+```{r}
+# install.packages("ggplot2")
+library(ggplot2)
+
+ggplot(data = survey, aes(x = factor(Smoke))) +
+  geom_bar(stat = "count", width=0.5)
+
+ggplot(data = survey, aes(x = factor(Smoke))) + 
+  geom_bar(stat = "count", width = 0.7,
+           fill = c("black", "green", "lightgrey", "darkgrey", "grey")) +
+  theme_minimal()
+
+ggplot(data = survey, aes(x = factor(Smoke))) + 
+  geom_bar(stat = "count", width = 0.7,
+           fill = c("black", "green", "lightgrey", "darkgrey", "grey")) +
+  theme_classic()
+
+ggplot(data = survey, aes(x = factor(Smoke), color = factor(Smoke))) + 
+  geom_bar(stat = "count", width = 0.7, fill = "white") +
+  scale_color_manual(values=c("black", "green", "lightgrey", "darkgrey", "grey"))
+```
+
+Сега да разгледаме данните за тютюнопушенето в зависимост от пола:\
+Данните за тютюнопушенето са качествени. Данните за пола, също са качествени. \
+Честотната таблица
+```{r}
+table(survey$Sex, survey$Smoke)
+```
+Вероятността за едновременото сбъдване. Сумата от вероятностите в таблицата трябва да е 1.
+```{r}
+prop.table(table(survey$Sex, survey$Smoke))
+sum(prop.table(table(survey$Sex, survey$Smoke)))
+```
+Условните веротности.\
+Верояността да се случи събитието в колоната, при условие, че се е случило събитието в реда. Вероятностите в реда трябва да се сумират до 1.
+```{r}
+prop.table(table(survey$Sex, survey$Smoke), 1)
+sum(prop.table(table(survey$Sex, survey$Smoke), 1)[1, ])
+sum(prop.table(table(survey$Sex, survey$Smoke), 1)[2, ])
+```
+Верояността да се случи събитието в реда, при условие, че се е случило събитието в колоната. Вероятностите в колоната трябва да се сумират до 1.
+```{r}
+prop.table(table(survey$Sex, survey$Smoke), 2)
+sum(prop.table(table(survey$Sex, survey$Smoke), 2)[, 1])
+sum(prop.table(table(survey$Sex, survey$Smoke), 2)[, 2])
+sum(prop.table(table(survey$Sex, survey$Smoke), 2)[, 3])
+sum(prop.table(table(survey$Sex, survey$Smoke), 2)[, 4])
+```
+Можем да зададем до къде да е закръглянето
+```{r}
+options(digits = 16)
+
+prop.table(table(survey$Sex, survey$Smoke))
+prop.table(table(survey$Sex, survey$Smoke), 1)
+prop.table(table(survey$Sex, survey$Smoke), 2)
+```
+
+Барплот (Barplot)
+```{r}
+barplot(table(survey$Sex, survey$Smoke))
+barplot(table(survey$Smoke, survey$Sex))
+barplot(table(survey$Sex, survey$Smoke),
+        main = "Type of Smoking depending on Sex",
+        names.arg = c("Heavy", "Never", "Occas", "Regul"),
+        beside = TRUE,
+        col = c("Pink", "lightblue"),
+        xlab = "Type of smoking")
+barplot(table(survey$Sex, survey$Smoke),
+        main = "Type of Smoking depending on Sex",
+        names.arg = c("Heavy", "Never", "Occas", "Regul"),
+        legend.text = TRUE,
+        beside = TRUE,
+        col = c("Pink", "lightblue"),
+        xlab = "Type of smoking")
+barplot(table(survey$Smoke, survey$Sex),
+        main = "Type of Smoking depending on Sex",
+        names.arg = c("Female", "Male"),
+        legend.text = TRUE,
+        beside = TRUE,
+        col = c("Black", "Green", "lightgrey", "darkgrey"),
+        xlab = "Sex")
+```
+
+## Задача 3
+Пресметнете оценки - средно, медиана, квартили, стандартно отклонение и т.н. за височината на студентите. Направете отделни изчисления за мъжете и за жените. Каква част от студентите се различават от средната височина с неповече от едно стандартно отклонение?\
+
+Височината на студентите. Виждаме, че имаме много NA и трябва да внимаваме с тях.
+```{r}
+survey$Height
+```
+Най-ниският студент е с височина:
+```{r}
+min(survey$Height, na.rm = TRUE)
+```
+Най-високият студент е с височина:
+```{r}
+max(survey$Height, na.rm = TRUE)
+```
+Средната височина на студентите:
+```{r}
+mean(survey$Height, na.rm = TRUE)
+```
+Медианата на височините:
+```{r}
+median(survey$Height, na.rm = TRUE)
+```
+Първия квартил
+```{r}
+quantile(survey$Height, 0.25, na.rm = TRUE)
+```
+Третия квартил
+```{r}
+quantile(survey$Height, 0.75, na.rm = TRUE)
+```
+Дисперсията
+```{r}
+var(survey$Height, na.rm = TRUE)
+```
+Стандартното отклонение на височините
+```{r}
+sd(survey$Height, na.rm = TRUE)
+```
+Range:\
+R = max - min
+```{r}
+max(survey$Height, na.rm = TRUE) - min(survey$Height, na.rm = TRUE)
+```
+IQR (Интерквартилен размах)
+```{r}
+IQR(survey$Height, na.rm = TRUE)
+```
+Min 1st_Q Median Mean 3rd_Q Max NA
+```{r}
+summary(survey$Height)
+```
+Min H_lower Median H_upper Max
+```{r}
+fivenum(survey$Height)
+```
+Отделни изчисления за мъжете и жените
+```{r}
+summary(survey$Height[survey$Sex == "Male"])
+summary(survey$Height[survey$Sex == "Female"])
+```
+Каква част от студентите се различават от средната височина с неповече от едно 1 стандартно отклонение?\
+т.е. наблюдението да попадне в интервала\
+[mean - sd, mean + sd]\
+mean - sd < y < mean + sd\
+- sd < y - mean < sd\
+|y - mean| < sd\
+```{r}
+clean.hight = survey$Height[!is.na(survey$Height)]
+mean = mean(clean.hight)
+sd = sd(clean.hight)
+sum(abs(clean.hight - mean) < sd) / length(clean.hight)
+```
+
+## Задача 4
+Представете графично височината на студентите.
+
+Височината на студентите е количествена променлива.
+Min 1st_Q Median Mean 3rd_Q Max NA
+```{r}
+summary(survey$Height)
+```
+Min H_lower Median H_upper Max
+```{r}
+fivenum(survey$Height)
+clean.height = survey$Height[!is.na(survey$Height)]
+```
+Хистограма
+```{r}
+hist(clean.height)
+hist(clean.height,
+     right = FALSE,
+     main = "Hist of the height of the students",
+     xlab = "Hight")
+rug(jitter(clean.height))
+hist(clean.height,
+     right = FALSE,
+     main = "Hist of the height of the students",
+     xlab = "Hight",
+     probability = TRUE)
+rug(jitter(clean.height))
+```
+Кутия с мустачки
+```{r}
+boxplot(clean.height)
+boxplot(clean.height, horizontal = TRUE)
+```
+Хистограма и курия с мустачки на една графика
+```{r}
+library(UsingR)
+simple.hist.and.boxplot(clean.height)
+```
+Хистограма и полигон на една графика
+```{r}
+min.height = min(clean.height); min.height
+max.height = max(clean.height); max.height
+breaks = seq(min.height, max.height, by = 10); breaks
+survey$height.cut = cut(survey$Height, breaks, right = FALSE)
+View(survey)
+table(survey$Height.cut)
+tmp = hist(clean.height)
+lines(c(min(tmp$breaks), tmp$mids, max(tmp$breaks)), c(0, tmp$counts, 0), type = "l", col = "red")
+```
+Хистограма и плътност\
+```{r}
+clean.height = survey$Height[!is.na(survey$Height)]
+hist(clean.height, 15, prob = TRUE)
+lines(density(clean.height, bw = "SJ"), col = 'red')
+```
+Нарисучайте графика на височината на студентите, разделена по пол.
+```{r}
+boxplot(survey$Height ~ survey$Sex)
+```
+
+## Задача 5
+Направете хистограма за пулса на студентите. Добавете плътността.
+```{r}
+names(survey)
+hist(survey$Pulse)
+hist(survey$Pulse, 
+     right = FALSE, 
+     main = "Histogram of the pulse of the students", 
+     xlab = "Pulse" ) 
+```
+Хистограма на относителните честоти
+```{r}
+hist(survey$Pulse, 
+     right = FALSE, 
+     main = "Histogram of the pulse of the students",
+     xlab = "Pulse",
+     probability = TRUE)
+```
+Хистограма и плътност
+```{r}
+clean.pulse = survey$Pulse[!is.na(survey$Pulse)]
+hist(clean.pulse, breaks = 15, prob = TRUE, main = "Histogram of the pulse of the students")
+lines(density(clean.pulse, bw = "SJ"), col = 'red')
+```
+
+## Задача 6
+Разделете студентите според възрастта им на три групи: А - до 20г, B- от 20 до 25 и C - над 25. Представете графично. Направете таблица за разпределението на пушачите в различните възрасти, представете графично.
+```{r}
+breaks = c(min(survey$Age), 20, 25, max(survey$Age)); breaks
+survey$аge.cut = cut(survey$Age, breaks, right = FALSE)
+View(survey)
+table(survey$аge.cut)
+
+hist(survey$Age,
+     main = "Histogram of the age of the students",
+     breaks = breaks)
+
+table(survey$аge.cut,survey$Smoke)
+```
+
+Представете графично височината на студентите по подгрупи.
+```{r}
+boxplot(survey$Age ~ survey$Smoke)
+```
