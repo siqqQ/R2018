@@ -1,0 +1,248 @@
+---
+title: "Bivariate Data"
+author:
+  - email: "mpetevap@uni-sofia.bg"
+    name: "Monika Peteva Petkova"
+date: "`r format(Sys.time(), '%Y')`"
+output:
+  html_notebook:
+  toc: yes
+word_document: 
+  toc: true
+html_document:
+  toc: true
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The relationship bertween 2 variables:
+
+# Bivariate categorical data
+
+#### Example 1:
+Students who smoke study less amount:
+* 1  - less than 5 hours studing, 
+* 2  - 5 - 10 hours studying,
+* 3  - more than 10 hours studying)
+```{r}
+smokes = c("Yes","No","No","Yes","No","Yes","Yes","Yes","No","Yes")
+amount = c(1,2,2,3,3,1,2,1,3,2)
+table(smokes,amount)
+```
+
+```{r}
+prop.table(table(smokes,amount))
+prop.table(table(smokes,amount),1)
+prop.table(table(smokes,amount),2)
+options(digits = 3)
+```
+
+#### Example 2:
+```{r}
+hair = c("blond", "blond", "black", "blond", "brown", "brown", 
+         "brown", "brown", "black", "brown", "black", "brown",
+         "black", "black", "black", "brown", "brown", "brown",
+         "brown", "brown", "black", "brown", "black", "brown",
+         "blond", "blond", "black", "blond", "brown", "brown", 
+         "brown", "brown", "black", "brown", "black", "brown",
+         "brown", "brown", "black", "brown", "black", "brown",
+         "blond", "blond", "black", "blond", "brown", "brown")
+eyes = c("blue", "green", "brown",  "blue", "green", "brown",
+         "brown", "black", "black", "green", "brown", "brown",
+         "green", "black", "black", "brown", "brown", "black",
+         "green", "black", "black", "brown", "brown", "black",
+         "brown",  "blue", "green", "brown", "brown", "black",
+         "black", "green", "brown",  "blue", "green", "brown",
+         "brown", "black", "brown",  "blue", "green", "brown",
+         "blue", "green", "brown",  "blue", "green", "brown")
+table(hair, eyes)
+prop.table(table(hair, eyes))
+prop.table(table(hair, eyes),1)
+prop.table(table(hair, eyes),2)
+```
+
+Барплот
+```{r}
+barplot(table(smokes,amount))
+barplot(table(amount,smokes))
+barplot(table(smokes,amount),
+        names.arg = c("<5 hours", "5-10 hours", ">10 hours"),
+        beside = TRUE,
+        col = c("Green", "Grey"),
+        xlab = "study hours")
+barplot(table(smokes,amount),
+        names.arg = c("<5 hours", "5-10 hours", ">10 hours"),
+        legend.text = TRUE,
+        beside = TRUE,
+        col = c("Green", "Grey"),
+        xlab = "study hours")
+barplot(table(amount,smokes),
+        legend.text = c("<5 hours studying","5-10 hours studying",">10 hours studying"),
+        beside = TRUE,
+        col = c("Yellow", "Orange", "Red"))
+```
+
+You can also see:
+
+* apply, tapply, mapply, sapply
+
+You can also see: 
+
+* lattice, ggplot2
+
+# Categorical vs Numerical data
+#### Example 1:
+Drug test - experimental group and control group
+```{r}
+experimentalGroup = c(5, 5, 5, 13, 7, 11, 11, 9, 8, 9)
+controlGroup = c(11, 8, 4, 5, 9, 5, 10, 5, 4, 10)
+boxplot(experimentalGroup, controlGroup)
+```
+#### The same example:
+```{r}
+amount = c(5, 5, 5, 13, 7, 11, 11, 9, 8, 9, 11, 8, 4, 5, 9, 5, 10, 5, 4, 10)
+category = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
+boxplot(amount ~ category)
+```
+breaking up the values in amount, by the categories in category\
+amount by category
+
+# Numerical vs numerical data
+### Compare the distributions
+#### Example
+Home data
+* boxplot
+```{r}
+library("UsingR")
+head(home)
+names(home)
+home$old
+home$new
+boxplot(home$new)
+boxplot(home$old)
+boxplot(home$new, home$old)
+mean(home$new)
+mean(home$old)
+sd(home$new)
+sd(home$old)
+scale(home$old)
+scale(home$new)
+boxplot(scale(home$new))
+boxplot(scale(home$old))
+par(mfrow = c(1, 2))
+boxplot(scale(home$new), main = "new")
+boxplot(scale(home$old), main = "old")
+```
+* Dot plots (Точкова диаграма)
+```{r}
+stripchart(home$old)
+stripchart(home$new)
+par(mfrow = c(2, 1))
+stripchart(scale(home$old), main = "old")
+stripchart(scale(home$new), main = "new")
+```
+* Violin Plot instead of boxplots
+```{r}
+violinplot(scale(home$old), scale(home$new))
+simple.violinplot(scale(home$old), scale(home$new))
+```
+
+### Compare relationships
+Investigate one numerical variable against another
+
+* Scatter plot
+```{r}
+home
+plot(home$old, home$new)
+min(home$old)
+min(home$new)
+```
+Entire data set
+```{r}
+homedata
+plot(homedata$y1970, homedata$y2000)
+```
+Strong linear trend
+
+* **Pearson correlation coefficients** [-1 < Corr < 1]
+
+- Scaled Covariance between X and Y
+- How one variable varies as the other does
+
+* * 1 - strong linear relationship
+* * 0 - weak one (no **linear** realtionship)
+
+The Pearson correlation coefficient indicates the strength of a linear relationship between two variables, but its value generally does not completely characterize their relationship.\
+See [picture1](https://en.wikipedia.org/wiki/Correlation_and_dependence#/media/File:Correlation_examples2.svg) and [picture2](https://en.wikipedia.org/wiki/Correlation_and_dependence#/media/File:Anscombe%27s_quartet_3.svg) from [here:](https://en.wikipedia.org/wiki/Correlation_and_dependence)
+```{r}
+cor(home$old, home$new)
+cor(home$old, home$new)^2
+```
+Funny online games to predict correlations:
+[game1](http://guessthecorrelation.com/)
+[game2](http://istics.net/Correlations/)
+
+```{r}
+homedata
+plot(homedata$y1970, homedata$y2000)
+plot(homedata$y2000 ~ homedata$y1970)
+cor(homedata$y1970, homedata$y2000)
+plot(homedata)
+```
+
+# Linear regression
+```{r}
+homedata
+plot(homedata$y1970, homedata$y2000)
+abline(lm(homedata$y2000 ~ homedata$y1970))
+simple.lm(homedata$y1970, homedata$y2000)
+lm.res = simple.lm(homedata$y1970, homedata$y2000)
+coef(lm.res)
+coef(lm.res)[1]
+coef(lm.res)[2]
+simple.lm(homedata$y1970, homedata$y2000, show.residuals = TRUE)
+```
+
+```{r}
+summary(lm(homedata$y2000 ~ homedata$y1970))
+```
+
+```{r}
+head(emissions)
+plot(emissions)
+plot(emissions$CO2, emissions$GDP)
+```
+
+```{r}
+florida
+plot(florida)
+names(florida)
+cor(florida$BUSH, florida$BUCHANAN)
+plot(florida$BUSH, florida$BUCHANAN)
+simple.lm(florida$BUSH, florida$BUCHANAN)
+simple.lm(florida$BUSH, florida$BUCHANAN, show.residuals = TRUE)
+```
+Strong linear relationship, except for two outliers\
+Copy the code on the console and click on the two outliers.\
+Esc to finish and print the identified cordinates
+```{r}
+simple.lm(florida$BUSH, florida$BUCHANAN)
+identify(florida$BUSH, florida$BUCHANAN)
+```
+```{r}
+florida[50,]
+florida.new = florida[-50, ]
+lm.res = simple.lm(florida.new$BUSH, florida.new$BUCHANAN)
+coef(lm.res)[1]
+coef(lm.res)[2]
+x = 152846
+y = coef(lm.res)[1] + coef(lm.res)[2] * x; y
+```
+We expect Buchanan to have received 598 votes, not 3407 as actually received.
+
+```{r}
+simple.lm(florida$BUSH, florida$BUCHANAN)
+abline(65.6, 0.00348)
+```

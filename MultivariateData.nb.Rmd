@@ -1,0 +1,108 @@
+---
+title: "Multivariate Data"
+author:
+  - email: "mpetevap@uni-sofia.bg"
+    name: "Monika Peteva Petkova"
+date: "`r format(Sys.time(), '%Y')`"
+output:
+  html_notebook:
+  toc: yes
+word_document: 
+  toc: true
+html_document:
+  toc: true
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Multivariate Data
+```{r}
+weight = c(150, 135, 210, 140)
+height = c(65, 61, 70, 65)
+gender = c("Fe","Fe","M","Fe")
+study = data.frame(weight,height,gender)
+study
+```
+
+```{r}
+PlantGrowth
+unstack(PlantGrowth)
+boxplot(unstack(PlantGrowth))
+```
+
+```{r}
+hair = c("blond", "blond", "black", "blond", "brown", "brown", 
+         "brown", "brown", "black", "brown", "black", "brown",
+         "black", "black", "black", "brown", "brown", "brown",
+         "brown", "brown", "black", "brown", "black", "brown",
+         "blond", "blond", "black", "blond", "brown", "brown", 
+         "brown", "brown", "black", "brown", "black", "brown",
+         "brown", "brown", "black", "brown", "black", "brown",
+         "blond", "blond", "black", "blond", "brown", "brown")
+eyes = c("blue", "green", "brown",  "blue", "green", "brown",
+         "brown", "black", "black", "green", "brown", "brown",
+         "green", "black", "black", "brown", "brown", "black",
+         "green", "black", "black", "brown", "brown", "black",
+         "brown",  "blue", "green", "brown", "brown", "black",
+         "black", "green", "brown",  "blue", "green", "brown",
+         "brown", "black", "brown",  "blue", "green", "brown",
+         "blue", "green", "brown",  "blue", "green", "brown")
+sex = c("female", "male", "female", "female", "female", "male",
+        "male", "male", "female", "female", "male", "male",
+        "male", "male", "female", "male", "male", "female",
+        "female", "male", "female", "female", "female", "male",
+        "male", "male", "female", "female", "male", "male",
+        "male", "male", "female", "male", "male", "female",
+        "female", "male", "female", "female", "female", "male",
+        "male", "male", "female", "female", "male", "male")
+student = c("yes", "no", "no", "no", "no", "yes",
+            "yes", "no", "yes", "no", "yes", "no",
+            "no", "yes", "yes", "yes", "no", "yes",
+            "yes", "no", "no", "no", "no", "yes",
+            "yes", "no", "yes", "no", "yes", "no",
+            "no", "yes", "yes", "yes", "no", "yes",
+            "yes", "no", "no", "no", "no", "yes",
+            "yes", "no", "yes", "no", "yes", "no")
+table(hair, eyes, sex, student)
+prop.table(table(hair, eyes, sex, student))
+ftable(hair, eyes, sex, student)
+```
+
+```{r}
+x = rnorm(100)
+y = factor(rep(1:10,10))
+stripchart(x ~ y)
+```
+
+```{r}
+InsectSprays
+boxplot(InsectSprays$count ~ InsectSprays$spray, col = "lightgray")
+simple.violinplot(InsectSprays$count ~ InsectSprays$spray, col = "lightgray")
+simple.densityplot(InsectSprays$count ~ InsectSprays$spray)
+```
+
+```{r}
+emissions
+simple.scatterplot(emissions$perCapita, emissions$CO2)
+```
+
+```{r}
+pairs(emissions)
+```
+
+```{r}
+# install.packages("lattice")
+library(lattice)
+library(UsingR)
+histogram( ~ Max.Price | Cylinders , data = Cars93)
+```
+
+```{r}
+bwplot( ~ Max.Price | Cylinders , data = Cars93)
+```
+
+```{r}
+xyplot(MPG.highway ~ Fuel.tank.capacity | Type, data = Cars93)
+```

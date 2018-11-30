@@ -1,0 +1,342 @@
+---
+title: "Titanic"
+author:
+  - email: "mpetevap@uni-sofia.bg"
+    name: "Monika Peteva Petkova"
+date: "`r format(Sys.time(), '%Y')`"
+output:
+  html_notebook:
+  toc: yes
+word_document: 
+  toc: true
+html_document:
+  toc: true
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Библиотеките, които ще използваме са:
+```{r, warning=FALSE}
+library(UsingR)
+```
+
+Данните, които ще обрабоотваме, могат да бъдат свалени от [kaggle](https://www.kaggle.com/c/titanic/data) или файла "titanic.csv" от проекта.\
+Зареждаме и разглеждаме данните.
+```{r}
+titanic = read.csv("titanic.csv")
+View(titanic)
+names(titanic)
+summary(titanic[-1, -4, -11])
+```
+
+Данните се разделят на няколко групи:
+
+* Категорни данни
+* Количествени данни
+* * Дискретни
+* * Непрекъснати
+
+# Да определем от таблицата titanic, какъв е типа на колоните?
+
+* **Survived** - Категорна данна
+* **Pclass** - Категорна данна
+* **Sex** - Категорна данна
+* **Age** - Количествена данна, непрекъсната
+* **SibSp** - Количествена данна, дискретна
+* **Parch** - Количествена данна, дискретна
+* **Fare** - Количествена данна, непрекъсната
+* **Embarked** - Категорна данна
+
+# Едномерни анализи
+
+## Да разгледаме категорните данни:
+
+### Survived
+```{r}
+head(titanic$Survived)
+head(factor(titanic$Survived))
+```
+Имаме 0, ако човека не е оцелял и 1, ако човека е оцелял.\
+
+Честотна таблица (Frequency table)\
+Абсолютни честоти
+```{r}
+table(titanic$Survived)
+```
+Вижда се, че броя на загналите е по-голям от броя на оцелелите.\
+
+Относителни честоти
+```{r}
+table(titanic$Survived, useNA = "ifany") / length(titanic$Survived)
+```
+Вижда се, че вероятността случайно избран, човек да е загинал е 0.62, а вероятността да е уживял е 0.38.
+
+Графични методи за представяне на категорни данни:
+* Барплот (Barplot)
+```{r}
+barplot(table(titanic$Survived))
+```
+С зададени цветове, имена на категориите и заглавие
+```{r}
+barplot(table(titanic$Survived), 
+        names.arg = c("Dead", "Survived"),
+        col = c("red", "green"),
+        main = "People on Titanic",
+        ylab = "Frequency")
+```
+Барплот на относителните честоти
+```{r}
+table(titanic$Survived)/length(titanic$Survived)
+barplot(table(titanic$Survived)/length(titanic$Survived),
+        names.arg = c("Dead", "Survived"),
+        col = c("red", "green"),
+        main = "People on Titanic",
+        ylab = "Probability")
+```
+
+* Кръгова диаграма (Pie Chart)
+```{r}
+pie(table(titanic$Survived))
+```
+С зададени цветове, имена на категориите и  заглавие
+```{r}
+pie(table(titanic$Survived),
+    labels = c("Dead", "Alive"),
+    col = c("Red", "green"),
+    main = "People on Titanic")
+```
+    
+### Pclass
+```{r}
+head(titanic$Pclass)
+head(factor(titanic$Pclass))
+```
+Можете да направите същото...
+
+### Sex
+```{r}
+head(titanic$Sex)
+head(factor(titanic$Sex))
+```
+Можете да направите същото...
+
+### Embarked
+```{r}
+head(titanic$Embarked)
+head(factor(titanic$Emarked))
+```
+Можете да направите същото...
+
+## Да разгледаме количествените дискретни данни
+### SibSp
+```{r}
+head(titanic$SibSp)
+```
+Вариационния ред
+```{r}
+sort(titanic$SibSp)
+```
+Минимална стойност на SibSp
+```{r}
+min(titanic$SibSp)
+```
+Максимална стойност на SibSp
+```{r}
+max(titanic$SibSp)
+```
+Връща минималната и максималната стоност
+```{r}
+range(titanic$SibSp)
+```
+Средно на SibSp
+```{r}
+mean(titanic$SibSp)
+```
+Медиана на SibSp
+```{r}
+median(titanic$SibSp)
+```
+Дисперсия на SibSp
+```{r}
+var(titanic$SibSp)
+```
+Стандартно отклонение на SibSp
+```{r}
+sd(titanic$SibSp)
+```
+Първи квартил
+```{r}
+quantile((titanic$SibSp), 0.25)
+```
+Трети квартил
+```{r}
+quantile((titanic$SibSp), 0.75)
+```
+Размах (Range)
+R = max - min
+```{r}
+range(titanic$SibSp)[2] - range(titanic$SibSp)[1]
+```
+Интерквартилен размах (IQR)
+```{r}
+IQR(titanic$SibSp)
+```
+Изчислява пет статистики Min LowerHinge Median UpperHinge Max NA
+```{r}
+fivenum(titanic$SibSp)
+```
+Изчилява пет статистики Min 1stQuantile Median Mean 3rdQuantile Max
+```{r}
+summary(titanic$SibSp)
+```
+Графични методи за представяне на количествени данни:
+* Хистограма
+```{r}
+hist(titanic$SibSp,
+     include.lowest = TRUE,
+     right = TRUE,
+     main = "Ticket price")
+rug(jitter(titanic$SibSp))
+```
+* Кутия с мустачки
+```{r}
+boxplot(titanic$SibSp,
+        horizontal = TRUE)
+```
+* Хистограма и курия с мустачки
+```{r}
+simple.hist.and.boxplot(titanic$SibSp)
+```
+* Полигон
+```{r}
+h = hist(titanic$SibSp)
+h$breaks
+h$counts
+h$density
+h$mids
+h$xname
+lines(c(min(h$breaks), h$mids, max(h$breaks)),
+      c(0, h$counts, 0),
+      type = "l")
+```
+```{r}
+simple.freqpoly(titanic$SibSp)
+```
+* Плътност (Density)
+```{r}
+hist(titanic$SibSp,
+     probability = TRUE)
+lines(density(titanic$SibSp, bw = 0.6), col = "blue")
+```
+
+### Parch
+
+## Количествените непрекъснати данни
+
+### Fare
+```{r}
+head(titanic$Fare)
+```
+Вариационият ред
+```{r}
+head(sort(titanic$Fare),100)
+tail(sort(titanic$Fare),100)
+```
+Минимална стойност за цена на билет
+```{r}
+min(titanic$Fare)
+```
+Максимална стойност за цена на билет
+```{r}
+max(titanic$Fare)
+```
+Средната цена на билетите
+```{r}
+mean(titanic$Fare)
+```
+Медиана на цените на билетите
+```{r}
+median(titanic$Fare)
+```
+Дисперсия на цените на билетите
+```{r}
+var(titanic$Fare)
+```
+Стандартно отклонение на цените на билетите
+```{r}
+sd(titanic$Fare)
+```
+Първи квартил
+```{r}
+quantile((titanic$Fare), 0.25)
+```
+Трети квартил
+```{r}
+quantile((titanic$Fare), 0.75)
+```
+Размах (Range)
+R = max - min..
+```{r}
+range(titanic$Fare)[2] - range(titanic$Fare)[1]
+diff(range(titanic$Fare))
+```
+Интерквартилен размах (IQR)
+```{r}
+IQR(titanic$Fare)
+```
+.. Min H_lower Median H_upper Max
+```{r}
+fivenum(titanic$Fare)
+```
+.. Min 1st_Q Median Mean 3rd_Q Max NA
+```{r}
+summary(titanic$Fare)
+```
+Хистограма
+```{r}
+hist(titanic$Fare,
+     include.lowest = TRUE,
+     right = TRUE,
+     main = "Ticket price")
+rug(jitter(titanic$Fare))
+```
+Кутия с мустачки
+```{r}
+boxplot(titanic$Fare,
+        horizontal = TRUE)
+```
+Хистограма и курия с мустачки
+```{r}
+simple.hist.and.boxplot(titanic$Fare)
+```
+Полигон
+```{r}
+h = hist(titanic$Fare)
+h$breaks
+h$counts
+h$density
+h$mids
+h$xname
+lines(c(min(h$breaks), h$mids, max(h$breaks)),
+      c(0, h$counts, 0),
+      type = "l")
+```
+```{r}
+simple.freqpoly(titanic$Fare)
+```
+Плътност (Density)
+```{r}
+hist(titanic$Fare,
+     probability = TRUE)
+lines(density(titanic$Fare, bw = 10), col = "blue")
+```
+
+### Age
+
+Може да се опитате да анализирате резултатите, да си поиграете повече с графиките, като използвате latice и ggplot и да приложите знанията от следващите лекции за 2 и повече променливи.
+
+## Двумерни анализи
+
+## Многомерни анализи

@@ -1,0 +1,751 @@
+---
+title: "Random Data"
+author:
+  - email: "mpetevap@uni-sofia.bg"
+    name: "Monika Peteva Petkova"
+date: "`r format(Sys.time(), '%Y')`"
+output:
+  html_notebook:
+  toc: yes
+word_document: 
+  toc: true
+html_document:
+  toc: true
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Discrete Distriution
+* Probability mass function (pmf)
+* Cumulative distribution function (cmf)
+* [Moments](https://en.wikipedia.org/wiki/Moment_(mathematics))
+* * First moment - Mean - EX
+* * Second moment - Variance - VarX
+* * Third moment - Skewness
+* * Fourth moment - Kurtosis
+
+## [Uniform discrete distribution (Дискретно равномерно разпределение)](https://en.wikipedia.org/wiki/Discrete_uniform_distribution)
+A known, finite number of outcomes equally likely to happen.
+**X ~ U(min, max)**
+**X ~ Unif(min, max)**
+
+Probability mass function (pmf) of the Uniform distribution
+```{r}
+min = 0
+max = 3
+n = max - min + 1
+plot(min:max, rep(1/n, n), type = "h", col = "blue")
+points(min:max, rep(1 / n, n), type = "p", lwd = 3, col = "darkblue")
+```
+
+**sample**(x, size, replace = FALSE)
+
+### Example 1:
+Row a dice 10 times.
+```{r}
+sample(1:6, size = 10, replace = TRUE)
+```
+
+Probability mass function (pmf)
+```{r}
+min = 1
+max = 6
+n = max - min + 1
+plot(min:max, rep(1/n, n), type = "h", col = "blue")
+points(min:max, rep(1 / n, n), type = "p", lwd = 3, col = "darkblue")
+```
+
+### Example 2:
+Toss a coin 10 times.
+```{r}
+sample(c("H","T"), size = 10, replace = TRUE)
+```
+
+### Example 3:
+Pick 6 of 49 (a lottery) numbers.
+```{r}
+sample(1:49, size = 6)
+```
+
+Probability mass function (pmf)
+```{r}
+min = 1
+max = 49
+n = max - min + 1
+plot(min:max, rep(1/n, n), type = "h", col = "blue")
+points(min:max, rep(1 / n, n), type = "p", lwd = 3, col = "darkblue")
+```
+
+### Example 4:
+Pick 5 card.
+```{r}
+cards = paste(rep(c("A",2:10,"J","Q","K"), 4),
+              c("H","D","S","C"))
+cards
+```
+```{r}
+sample(x = cards, size = 5)
+```
+**rep** - replicates the values in x
+
+### Example 5:
+Roll 2 die
+```{r}
+dice = as.vector(outer(1:6,1:6,paste)); dice
+```
+**outer** - The product of the arrays X and Y is the array A with dimension c(dim(X), dim(Y))
+
+```{r}
+sample(x = dice, size = 5, replace = TRUE)
+```
+
+## [Bernoulli distribution (Бернулиево разпределение)](https://en.wikipedia.org/wiki/Bernoulli_distribution)
+Bernoulli distribution, named after Swiss mathematician Jacob Bernoulli is the probability distribution of a random variable which takes the value 1 with probability p and the value 0 with probability q = 1 - p.
+Частен случай на Биномно разпределената случайна величина.
+
+## [Binomial distribution (Биномно разпределение)](https://en.wikipedia.org/wiki/Binomial_distribution)
+The binomial distribution with parameters n and p is the discrete probability distribution of the number of successes in a sequence of n independent experiments.\
+Нека имаме n независими опити, с вероятност за "Успех" при всеки от тях p.\
+Тогава X - боря на "Успехите" при тези n опита е биномнo разпределена случайна величина\
+**X ~ Bi(n, p)**
+```{r}
+n = 1 # Брой опити
+p = 0.5 # Вероятност за "Успех" при всеки опит
+```
+Генерира едно число, което представлява - Един опит с вероятност за "Успех" 0.5
+**rinom** - generates random with uniform continuous distribution
+rbinom(n, size, prob)
+```{r}
+rbinom(1, n, p) # Бернулиево разпределена сл. в.
+```
+
+Генерира ни 1 числo, коeто e Биномно разпределено и представлява - 10 опит с вероятност за "Успех" 0.5
+```{r}
+n = 10 # Брой опити
+p = 0.5 # Вероятност за "Успех" при всеки опит
+rbinom(1, n, p) # Биномно разпределена сл.в.
+```
+
+Генерира ни 100 числo, които са Биномно разпределени и всяко от тях представлява - 10 опит с вероятност за "Успех" 0.5
+```{r}
+n = 10 # Брой опити
+p = 0.5 # Вероятност за "Успех" при всеки опит
+rbinom(100, n, p) # Биномно разпределена сл.в.
+```
+
+```{r}
+n = 10
+p = 3/5
+rbinom(1, 10, p)
+```
+
+```{r}
+rbinom(10, n, p)
+```
+
+```{r}
+n = 10 
+p = 0.5
+```
+Генерира едно число, което представлява - 10 опита с вероятност за "Успех" 0.5
+```{r}
+rbinom(1, n, p)
+```
+Генерира пет числа, които представляват - 10 опита с вероятност за "Успех" 0.5
+```{r}
+rbinom(5, n, p)
+```
+
+### Example:
+Генерира 100 числа, които представляват - 5 опита с вероятност за "Успех" 0.25
+```{r}
+n = 5
+p = 0.25
+x = rbinom(100, n, p) 
+x
+```
+```{r}
+table(x)
+```
+```{r}
+hist(x)
+```
+```{r}
+hist(x, probability = TRUE)
+```
+Probability mass function (pmf)\
+**dbinom** - gives the density
+```{r}
+n = 5
+p = 0.25
+x = rbinom(100, n, p) 
+hist(x, probability = TRUE)
+xvals = 0:n
+points(xvals, dbinom(xvals,n,p), type = "h", lwd = 3, col = "blue")
+points(xvals, dbinom(xvals,n,p), type = "p", lwd = 3, col = "darkblue")
+?points
+```
+"h" for histogram-like vertical lines\
+"p" for points\
+"l" for lines\
+"b" for both points and lines\
+"c" for empty points joined by lines\
+"o" for overplotted points and lines\
+"s" and "S" for stair steps\
+```{r}
+n = 5
+p = 0.25
+x = rbinom(100, n, p) 
+hist(x, probability = TRUE)
+xvals = 0:n
+?points
+points(xvals, dbinom(xvals,n,p), type = "h", lwd = 3)
+points(xvals, dbinom(xvals,n,p), type = "p", lwd = 3)
+points(xvals, dbinom(xvals,n,p), type = "s", lwd = 3)
+```
+"n" does not produce any points or lines.
+
+### Example:
+Генерира 100 числа, които представляват - 15 опита с вероятност за "Успех" 0.25
+```{r}
+n = 15
+p = 0.25
+x = rbinom(100, n, p); x
+table(x)
+hist(x, probability = TRUE)
+xvals = 0:n
+points(xvals, dbinom(xvals,n,p), type = "h", lwd = 3, col = "blue")
+points(xvals, dbinom(xvals,n,p), type = "p", lwd = 3, col = "darkblue")
+```
+### Example:
+Генерира 100 числа, които представляват - 50 опита с вероятност за "Успех" 0.25
+```{r}
+n = 50
+p = 0.25
+x = rbinom(100, n, p) 
+table(x)
+hist(x, probability = TRUE)
+xvals = 0:n
+points(xvals, dbinom(xvals,n,p), type = "h", lwd = 3, col = "blue")
+points(xvals, dbinom(xvals,n,p), type = "p", lwd = 3, col = "darkblue")
+```
+
+```{r}
+n = 5
+p = 0.25
+xvals = 0:n # seq(from = 0, to = n, by = 1)
+y = dbinom(xvals, n, p)
+plot(0:n, y, type = "s", col = "darkblue")
+points(xvals, dbinom(xvals,n,p), type = "h", lwd = 3, col = "blue")
+points(xvals, dbinom(xvals,n,p), type = "p", lwd = 3, col = "darkblue")
+```
+
+### Example
+**pbinom** - gives the probability\
+pbinom(q, size, prob, lower.tail = TRUE)\
+X ~ Bi(5, 0.25)\
+P(X <= 2)\
+```{r}
+pbinom(2, 5, 0.3)
+```
+P(X > 2)
+```{r}
+pbinom(2, 5, 0.3, lower.tail = FALSE)
+```
+**qbinom** - gives the quantile function 
+qbinom(p, size, prob, lower.tail = TRUE)
+### Example
+```{r}
+qbinom(0.83, 5, 0.3)
+qbinom(0.83, 5, 0.3, lower.tail = FALSE)
+```
+
+## [Geometric distribution (Геометрично разпределение)](https://en.wikipedia.org/wiki/Geometric_distribution)
+The probability distribution of the number Y = X − 1 of failures before the first success.\
+Нека имаме независими повторения на един и същи опити, с вероятност за "Успех" при всеки от тях p.\
+Tогава X - броя на опитите до първия "Успех" е геометрично разпределена случайна величина\
+**X ~ Ge(p)**\
+[link](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Geometric.html)\
+**dgeom**(x, prob)\
+**pgeom**(q, prob, lower.tail = TRUE)\
+**qgeom**(p, prob, lower.tail = TRUE)\
+**rgeom**(n, prob)\
+Частен случай на Отрицателно биномното разпределение.
+
+### Example
+Едно число, което представлява - броя на опитите до първия "Успех", ако вероятността ни за успех при един опит е 0.2
+```{r}
+rgeom(1, 0.2)
+```
+Десет числа, които представляват - броя на опитите до първия "Успех", ако вероятността ни за успех при един опит е 0.2
+```{r}
+rgeom(10, 0.2)
+```
+
+### Example
+Моделира броя неуспехи до първата се паднала 6-ца.
+```{r}
+p = 1/6
+x = rgeom(100, p); x
+hist(x, probability = TRUE)
+xvals = 0:100
+points(xvals, dgeom(xvals,p), type = "h", lwd = 3, col = "blue")
+points(xvals, dgeom(xvals,p), type = "p", lwd = 3, col = "darkblue")
+```
+
+```{r}
+p = 1/6
+pgeom(5, p)
+pgeom(10, p) - pgeom(5, p)
+qgeom(0.5, p)
+```
+
+
+
+## [Negative binomial distribution (Отрицателно биномно разпределение)](https://en.wikipedia.org/wiki/Negative_binomial_distribution)
+Discrete probability distribution of the number of successes in a sequence of independent and identically distributed Bernoulli trials before a specified number of successes occurs.\
+Нека имаме независими повторения на един и същи опити, с вероятност за "Успех" при всеки от тях p.\
+Тогава X - броя на неуспехите до n-тия "Успех" е отрицателно биномно разпределена случайна величина\
+**X ~ NBi(n, p)**\
+[link](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/NegBinomial.html)\
+**dnbinom**(x, size, prob)\
+**pnbinom**(q, size, prob, lower.tail = TRUE)\
+**qnbinom**(p, size, prob, lower.tail = TRUE)\
+**rnbinom**(n, size, prob)\
+
+### Example: 
+Едно число, което представлява - броя на неуспехите до 5тия "Успех", ако вероятността ни за успех при един опит е 0.2
+```{r}
+rnbinom(1, 5, 0.2)
+```
+Десет числа, които представляват- броя на неуспехите до 5тия "Успех", ако вероятността ни за успех при един опит е 0.2
+```{r}
+rnbinom(10, 5, 0.2)
+```
+
+### Example:
+Ако имаме зарче и наречем "Успех" хвърлянето на 6. То X ще ни моделира - броя неуспехи до 3тото падане на 6ца
+```{r}
+k = 3
+p = 1/6
+x = rnbinom(100, k, p); x
+hist(x, probability = TRUE)
+xvals = 0:100
+points(xvals, dnbinom(xvals,k,p), type = "h", lwd = 3, col = "blue")
+points(xvals, dnbinom(xvals,k,p), type = "p", lwd = 3, col = "darkblue")
+
+
+```
+
+```{r}
+k = 3
+p = 1/6
+pnbinom(5, k, p)
+pnbinom(10, k, p) - pnbinom(4, k, p)
+pnbinom(0.5, k, p)
+```
+
+## [Hypergeometric distribution (Хипергеометрично разпределение)](https://en.wikipedia.org/wiki/Hypergeometric_distribution)
+
+[link](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Hypergeometric.html)\
+Зависими опити\
+**X ~ HG(m, n, k)**\
+m - the number of white balls in the urn\
+n - the number of black balls in the urn\
+k - the number of balls drawn from the urn.\
+**dhyper**(x, m, n, k)\
+**phyper**(q, m, n, k, lower.tail = TRUE)\
+**qhyper**(p, m, n, k, lower.tail = TRUE)\
+**rhyper**(nn, m, n, k)
+
+### Example
+Едно число, което представлява - броя на извадените бели топки от урната, ако в началото на опита в урната е имало 10 бели и 12 черни топки и сме изтеглили 15 топки, без връщане.
+```{r}
+rhyper(1, 10, 12, 15)
+```
+Десет числа, които представляват - броя на извадените бели топки от урната, ако в началото на опита в урната е имало 10 бели и  12 черни топки и сме изтеглили 15 топки, без връщане, т.е. вероятността за бяла топка се е променяла при всяко теглене.
+```{r}
+rhyper(10, 10, 12, 15)
+```
+
+```{r}
+m = 20 # the number of white balls in the urn
+n = 12 # the number of black balls in the urn
+k = 15 # the number of balls drawn from the urn.
+x = rhyper(100, m, n, k); x
+hist(x, probability = TRUE)
+xvals = 0:100
+points(xvals, dhyper(xvals,m, n, k), type = "h", lwd = 3, col = "blue")
+points(xvals, dhyper(xvals,m, n, k), type = "p", lwd = 3, col = "darkblue")
+```
+
+
+
+## [Poisson distribution (Поасоново разпределение)](https://en.wikipedia.org/wiki/Poisson_distribution)
+Named after French mathematician Siméon Denis Poisson. Distribution that expresses the probability of a given number of events occurring in a fixed interval of time or space if these events occur with a known constant rate and independently of the time since the last event.\
+**X ~ Po(lambda)**\
+[link](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Poisson.html)\
+**dpois**(x, lambda)\
+**ppois**(q, lambda, lower.tail = TRUE)\
+**qpois**(p, lambda, lower.tail = TRUE)\
+**rpois**(n, lambda)
+```{r}
+lambda = 20 # arived cars
+x = rpois(100, lambda); x
+hist(x, probability = TRUE)
+xvals = 0:100
+points(xvals, dpois(xvals, lambda), type = "h", lwd = 3, col = "blue")
+points(xvals, dpois(xvals, lambda), type = "p", lwd = 3, col = "darkblue")
+```
+
+# Continuous Ditributions
+* Probability density function (pdf)
+* Cumulative distribution function (cmf)
+* [Moments](https://en.wikipedia.org/wiki/Moment_(mathematics))
+* * First moment - Mean - EX
+* * Second moment - Variance - VarX
+* * Third moment - Skewness
+* * Fourth moment - Kurtosis
+
+## [Uniform continuous distribution (Непрекъснато равномерно разпределение)](https://en.wikipedia.org/wiki/Uniform_distribution_(continuous))
+**runif** - generates n random numbers with uniform continuous distribution
+runif(n, min = 0, max = 1)
+```{r}
+runif(1,min = 0,max = 2)
+runif(5,min = 0,max = 2)
+```
+
+You can see that every time it generates a new numbers
+```{r}
+runif(5,min = 0,max = 2)
+runif(5,min = 0,max = 2)
+runif(5,min = 0,max = 2)
+```
+But if you want to save your work and continue later or send it to a friend or you need someone to check it. It is usefull to always generate same random numbers.\
+**set.seed()** - state for random number generation in R
+```{r}
+?set.seed
+set.seed(10)
+runif(5,min = 0,max = 2)
+set.seed(10)
+runif(5,min = 0,max = 2)
+set.seed(10)
+runif(5,min = 0,max = 2)
+```
+
+```{r}
+x = runif(100); x
+hist(x,
+     probability = TRUE,
+     col = gray(.9),
+     main = "Uniform on [0,1]")
+```
+**dunif** - gives the density
+dunif(x, min = 0, max = 1)
+```{r}
+x = runif(100); x
+hist(x,
+     probability = TRUE,
+     col = gray(.9),
+     main = "Uniform on [0,1]")
+dunif(x, min = 0, max = 1) # Calculated by the formula 1/(max - min) inside the interval
+curve(dunif(x, 0, 1),
+      add = TRUE,
+      col = 2)
+```
+**punif** - gives the probability\
+punif(q, min = 0, max = 1, lower.tail = TRUE)
+
+### Example:
+X ~ Uniform(0,1)\
+P(X <= 0.2)
+```{r}
+punif(0.2, 0, 1)
+```
+P(X > 0.2)
+```{r}
+punif(0.2, 0, 1, lower.tail = FALSE)
+```
+**qunif** - gives the quantile function 
+qunif(p, min = 0, max = 1, lower.tail = TRUE)
+```{r}
+qunif(0.6, 0, 1)
+```
+
+### Example:
+```{r}
+x = runif(100, min = 0, max = 2)
+hist(x,
+     probability = TRUE,
+     col = gray(.9),
+     main = "Uniform on [0,1]")
+```
+
+```{r}
+x = runif(100, min = 0, max = 2)
+hist(x,
+     probability = TRUE,
+     col = gray(.9),
+     main = "Uniform on [0,1]")
+dunif(x, min = 0, max = 2) # Calculated by the formula 1/(max - min) inside the interval
+                           # 1/(2 - 0) = 1/2 = 0.5
+curve(dunif(x, 0, 2),
+      add = TRUE,
+      col = 2)
+```
+
+# [Exponential distribution (Експоненциално разпределение)](https://en.wikipedia.org/wiki/Exponential_distribution)
+
+[link](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Exponential.html)
+
+```{r}
+x = rexp(100, 1/2500)
+hist(x, probability = TRUE, col = gray(.9), main = "exponential mean = 2500")
+curve(dexp(x, 1/2500), add = TRUE, col = "red")
+```
+
+# [Normal distribution (Нормално разпределение)](https://en.wikipedia.org/wiki/Normal_distribution)
+
+[link](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Normal.html)
+
+```{r}
+rnorm(1, mean = 100, sd = 16)
+rnorm(1, mean = 280, sd = 10)
+```
+
+```{r}
+x = rnorm(100)
+hist(x,probability = TRUE, col = gray(.9), main = "normal mu=0,sigma=1")
+curve(dnorm(x), add = TRUE, col = "red")
+```
+
+```{r}
+x = rnorm(100, mean = 100, sd = 16)
+hist(x, probability = TRUE, col = gray(.9), main = "normal mu=0,sigma=1")
+curve(dnorm(x, mean = 100, sd = 16), add = TRUE, col = "red")
+```
+
+```{r}
+x = rnorm(100, mean = 100, sd = 106)
+hist(x, probability = TRUE, col = gray(.9), main = "normal mu=0,sigma=1")
+curve(dnorm(x, mean = 100, sd = 106), add = TRUE, col = "red")
+```
+
+## z scores
+```{r}
+mean.x = 100
+sd.x = 16
+x = rnorm(5, mean.x, sd.x); x
+z.score = (x - mean.x) / sd.x; z.score
+```
+
+# [Student's t-distribution (t разпределение)](https://en.wikipedia.org/wiki/Student%27s_t-distribution)
+
+[link](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/TDist.html)
+
+```{r}
+x = rt(100, 10)
+hist(x, probability = TRUE, col = gray(.9), main = "normal mu=0,sigma=1")
+curve(dt(x, 10), add=TRUE, col = "red")
+```
+
+# [Chi-squared distribution (Хи квадрат разпределение)](https://en.wikipedia.org/wiki/Chi-squared_distribution)
+
+[link](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Chisquare.html)\
+
+Ако X1 ,X2, …, Xn са независими, еднакво стандартно нормално разпределени случайни величини, то сумата от квадратите им e X1^2 + X2^2 + .. + Xn^2 ~ X^2(n)
+
+```{r}
+x = rchisq(100, 10)
+hist(x, probability = TRUE, col = gray(.9), main = "normal mu=0,sigma=1")
+curve(dchisq(x, 10), add = TRUE, col = "red")
+```
+
+```{r}
+pnorm(0.7)
+pnorm(0.7, 1, 1)
+pnorm(0.7, lower.tail = FALSE)
+qnorm(0.75)
+```
+
+# A bootstrap sample
+```{r}
+faithful
+names(faithful)
+sample(faithful$eruptions, 10, replace = TRUE)
+hist(faithful$eruptions, breaks = 25) # the dataset
+hist(sample(faithful$eruptions, 100, replace = TRUE), breaks = 25)
+```
+
+# Problems - Verzani - page 47
+## Problem 6.1 
+X ~ U(0,1)
+```{r}
+x = runif(10, min = 0, max = 10); x
+min(x)
+max(x)
+```
+
+## Problem 6.2 
+```{r}
+x = rnorm(10, 5, 5); x
+sum(x < 0)
+pnorm(0, 5, 5)
+```
+
+## Problem 6.3
+```{r}
+x = rnorm(100, 100, 10); x
+sum(x < 80 | x > 120)
+```
+
+## 6.4
+```{r}
+x = rbinom(1, 50, 0.5); x
+
+x = rbinom(50, 1, 0.5)
+sum(x)
+```
+
+## 6.5
+```{r}
+x = rbinom(1, 100, 1/6); x
+sum(x = 6)
+```
+
+## 6.6
+```{r}
+x = sample(1:49, 6, replace = FALSE); x
+min(x)
+max(x)
+```
+
+## 6.7
+```{r}
+qnorm(0.05, 0, 1)
+```
+
+## 6.8
+```{r}
+qnorm(0.025, 0, 1)
+qnorm(1-0.025, 0, 1)
+```
+
+# Tasks - moodle
+
+## Задача 1
+Хвърлят се 30 зара. Каква е вероятността да се паднат по-малко от 5 шестици? Сравнете теоретичната вероятност с експериментални данни. Можем да твърдим, че с вероятност 0.75 ще се паднат повече от колко шестици?
+```{r}
+# Хвърляме 30 зара
+dices = sample(1:6, 30, replace = TRUE); dices
+table(dices)
+# X - брой паднали се шестици
+# X ~ Binom(30, 1/6)
+# P(X < 5) = P(X <= 4)
+pbinom(4 , size = 30, prob = 1/6)
+# Сравнете теоретичната вероятност с експериментални данни
+numberOfSixes = rbinom(1000, size = 30 , prob = 1/6) 
+plot(cumsum(numberOfSixes < 5) / (1:1000), type = "l", col = "blue")
+x = pbinom(4, size = 30, prob = 1/6)
+x0 = rep(x, 1000)
+x
+lines(x0, col = "red")
+table(numberOfSixes)
+hist(numberOfSixes)
+hist(numberOfSixes, probability = TRUE)
+xvals = 0:30
+points(xvals, dbinom(xvals, size = 30, prob = 1/6), type = "h", lwd = 3, col = "blue")
+points(xvals, dbinom(xvals, size = 30, prob = 1/6), type = "p", lwd = 3, col = "darkblue")
+# Можем да твърдим, че с вероятност 0.75 ще се паднат повече от колко шестици?
+qbinom(0.75, size = 30, prob = 1/6, lower.tail = FALSE)
+```
+
+## Задача 2
+Стрелец уцелва мишена с вероятност 0,2. За да спечели стрелецът трябва да направи три точни попадения. Каква е вероятноста за това да са му необходими:\
+а) точно 8 изстрела;\
+б) повече от 6 изстрела;\
+в) между 5 и 8 изстрела, включително?\
+```{r}
+# X ~ NBi(n = 3, p = 0.2)
+# a) P(X = 8 - 3) = P(x = 5) = P(X <= 5) - P(X <= 4)
+dnbinom(5, size = 3, prob = 0.2)
+pnbinom(5, size = 3, prob = 0.2) - pnbinom(4, size = 3, prob = 0.2)
+# б) P(X > 6 - 3) = P(X > 3)
+pnbinom(3 , size = 3, prob = 0.2, lower.tail = FALSE)
+# в) P(5 - 3 <= X <= 8 - 3) = P(2 <= X <= 5) = P(X <= 5) - P(X <= 1)
+pnbinom(5 , size = 3, prob = 0.2) - pnbinom(1 , size = 3, prob = 0.2)
+```
+
+## Задача 3
+В урна има 7 бели и 6 черни топки. От урната последователно без връщане се теглят 8 топки. Нека X е броя на изтеглените бели. Направете 1000 симулации и по тях пресметнете границите, в който се намира X, EX и DX. Намерете теоретичните стойности за EX и DX. Представете графично емперичното и теоритичното разпределение на X(на една графика).
+```{r}
+# Без връщане => зависими опити
+# X ~ HG(m = 7, n = 6, k = 8) 
+# m - брой бели топки в урната
+# n - брой черни топки в урната
+# k - броя на топките изтеглени от урната
+# Направете 1000 симулации и по тях пресметнете границите, в който се намира X, EX и DX.
+x = rhyper(1000, m = 7, n = 6, k = 8); head(x, 100)
+```
+
+# Tasks - moodle
+
+## Задача 1
+Генерирайте 100 случайни наблюдения над X. Постройте бокслот и хистограма, добавете емперичните и теоретичната плътност. Ако:\
+а) X ~ N(5, 2)
+б) X ~ Unif(1, 5)
+в) X ~ Exp(3)
+e) X ~ t(5)
+Определете типа на разпределението (симетрично или изместено, леки или тежки опашки, едномодални и т.н.)
+```{r}
+x = rnorm(100, 5, 2)
+boxplot(x)
+hist(x, probability = TRUE)
+lines(density(x, bw = "SJ"), col = 'blue')
+curve(dnorm(x, 5, 2), add = TRUE, col = "red")
+
+x = runif(100, 1, 5)
+boxplot(x)
+hist(x, probability = TRUE)
+lines(density(x, bw = "SJ"), col = 'blue')
+curve(dunif(x, 1, 5), add = TRUE, col = "red")
+
+x = rexp(100, 3)
+boxplot(x)
+hist(x, probability = TRUE)
+lines(density(x, bw = "SJ"), col = 'blue')
+curve(dexp(x, 3), add = TRUE, col = "red")
+
+x = rt(100, 5)
+boxplot(x)
+hist(x, probability = TRUE)
+lines(density(x, bw = "SJ"), col = 'blue')
+curve(dt(x, 5), add = TRUE, col = "red")
+```
+
+## Задача 3
+Определете дали са нормално разпределеи наблюденията:\
+а) теглото на бебетата дадени в babies от пакета UsingR
+б) exac.pay от пакета UsingR
+```{r}
+library(UsingR)
+View(babies)
+hist(babies$wt, probability = TRUE)
+lines(density(babies$wt, bw = "SJ"), col = 'blue')
+x = babies$wt
+curve(dnorm(x, mean(babies$wt), sd(babies$wt)), add = TRUE, col = "red")
+qqnorm(babies$wt)
+qqline(babies$wt)
+shapiro.test(babies$wt)
+
+exec.pay
+hist(exec.pay, probability = TRUE)
+lines(density(exec.pay, bw = "SJ"), col = 'blue')
+x = exec.pay
+curve(dnorm(x, mean(exec.pay), sd(exec.pay)), add = TRUE, col = "red")
+qqnorm(exec.pay)
+qqline(exec.pay)
+shapiro.test(exec.pay)
+```

@@ -1,0 +1,92 @@
+---
+title: "Introduction"
+author:
+  - email: "mpetevap@uni-sofia.bg"
+    name: "Monika Peteva Petkova"
+date: "`r format(Sys.time(), '%Y')`"
+output:
+  html_notebook:
+  toc: yes
+word_document: 
+  toc: true
+html_document:
+  toc: true
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Materials
+* Book: [Verzani, John _Simple R_](https://cran.r-project.org/doc/contrib/Verzani-SimpleR.pdf)
+* Course Web Site: [moodle](https://learn.fmi.uni-sofia.bg)
+* Software: [R](http://www.r-project.org)
+* IDE: [R Studio](https://www.rstudio.com/)
+
+# Why R?
+* R is free
+* R is open-source
+* R is interactive - results can be seen one command at a time
+* R runs on UNIX, Windows and Macintosh
+* R has an excellent built-in help system
+* R is powerful, easy to learn 
+* R has many built in statistical functions
+* R is easy to extend with user-written functions
+
+# R Environment
+Commands are written in the **R console** after the symbol ">".
+
+* Enter - run a command
+* Up Arrow - previous commands
+* Esc - interrupting a command
+
+# R Studio
+Created by a team led by JJ Allire <br/>
+  R Studio is highly customizablr, but in the basic interface we have:
+  
+  * Upper Left pannel 
+* * Text editor
+* Upper Right pannel
+* * Environment - interactive list of loaded R objects
+* * History
+* Lower Left pannel
+* * Console - location were commands are entered and the output is printed
+* Lower Right pannel
+* * Files - file explorer to navigate to your working folder
+* * Plots - output location for plots
+* * Packages - list of installed packages
+* * Help - output location for help commands and help search window
+
+[Keyboard Shortcuts](https://support.rstudio.com/hc/en-us/articles/200711853-Keyboard-Shortcuts):
+  
+  * Ctrl + Enter - send and execute command from editor to the console
+* Ctrl + Shift + S - run an entire file of code
+
+* Ctrl + Z - Undo
+* Ctrl + Shift + Z - Redo
+* Ctrl + D - Delete Line
+
+* Ctrl + 1 - moves the cursor to the text editor area
+* Ctrl + 2 - moves the cursor to the console area
+
+* Alt + Shift + K - shows keyboard shortcut reference
+
+R Studio Projects:
+  
+  * .Rproj - keeps track of the project
+
+
+# Content:
+* Introduction to R
+* Univariate data
+* Bivariate data
+* Multivariate data
+* Random data
+* Law of large numbers (LLM) and Central limit theorem (CLT)
+* Confidence Interval Estimation
+* Hypothesis Testing
+* Two-sample tests
+* Chi Square Tests
+* Regression Analysis
+* Multiple Linear Regression
+* Analysis of Variance
